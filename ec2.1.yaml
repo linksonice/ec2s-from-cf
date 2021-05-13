@@ -1,0 +1,21 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  WebInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      BlockDeviceMappings:
+        -
+          DeviceName: "/dev/sda1"
+          Ebs:
+            VolumeSize: 24
+            VolumeType: gp2
+      InstanceType: t2.nano
+      ImageId: ami-06dc09bb8854cbde3
+      KeyName: london-key-pair 
+      SecurityGroupIds:
+        - sg-09ce372beaff7e083
+      SubnetId: subnet-35d8495c 
+      Tags:
+        -
+          Key: Name
+          Value: webserver-by-cf-ver1
