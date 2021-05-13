@@ -21,4 +21,4 @@ Resources:
       Tags:
         -
           Key: Name
-          Value: webserver-by-cf-ver2
+          Value: ec2-by-cf-v2
