@@ -5,3 +5,11 @@ EC2s made to various specifications, with Cloudformation. Don't bother wasting y
 Here's how to order:
 
 aws cloudformation deploy --template-file ./ec2.3.yaml --stack-name ec2v3
+
+Here's how to destroy:
+
+aws cloudformation delete-stack --stack-name ec2v3
+
+Here's how to list all you got:
+
+aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE
