@@ -24,7 +24,7 @@ Resources:
       Tags:
         -
           Key: Name
-          Value: ec2-by-cf-ver3
+          Value: ec2-by-cf-v3
 
       UserData:
         Fn::Base64:
