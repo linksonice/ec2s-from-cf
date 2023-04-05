@@ -1,0 +1,44 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: Ec2 stack with a dockerised flask app 
+
+Resources:
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-06dc09bb8854cbde3
+      InstanceType: t2.micro
+      KeyName: london-key-pair
+      BlockDeviceMappings:
+        - DeviceName: "/dev/xvda"
+          Ebs:
+            VolumeSize: 16
+            VolumeType: gp2
+        - DeviceName: "/dev/xvdb"
+          Ebs:
+            VolumeSize: 12
+            VolumeType: gp2
+      SecurityGroupIds:
+        - sg-09ce372beaff7e083
+      SubnetId: subnet-35d8495c
+      Tags:
+        -
+          Key: Name
+          Value: ec2-by-cf-v5
+
+      UserData:
+        Fn::Base64:
+          !Sub |
+            #!/usr/bin/env bash
+            yum install docker -y
+            systemctl enable docker
+            systemctl start docker
+            # docker pull linksonice/python-api:latest
+            docker pull 207531873263.dkr.ecr.eu-west-2.amazonaws.com/python-api:latest
+            docker run -p5000:5000 -d linksonice/python-api 
+Outputs:
+  PublicIp:
+    Description: Public IP
+    Value: !GetAtt EC2Instance.PublicIp
+    Export:
+      Name: !Sub "${AWS::StackName}-PublicIp"

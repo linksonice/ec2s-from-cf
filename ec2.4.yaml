@@ -1,0 +1,49 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: Ec2 stack with multiple volumes, and a mount of one of these from userdata
+
+Resources:
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-06dc09bb8854cbde3
+      InstanceType: t2.micro
+      KeyName: london-key-pair
+      BlockDeviceMappings:
+        - DeviceName: "/dev/xvda"
+          Ebs:
+            VolumeSize: 16
+            VolumeType: gp2
+        - DeviceName: "/dev/xvdb"
+          Ebs:
+            VolumeSize: 12
+            VolumeType: gp2
+      SecurityGroupIds:
+        - sg-09ce372beaff7e083
+      SubnetId: subnet-35d8495c
+      Tags:
+        -
+          Key: Name
+          Value: ec2-by-cf-v4
+
+      UserData:
+        Fn::Base64:
+          !Sub |
+            #!/usr/bin/env bash
+            # the hostname
+            echo "ec2-by-cf-v4" > /etc/hostname
+            # create mount point directory
+            mkdir /opt/thisdir
+            # create ext4 filesystem on new volume           
+            mkfs -t ext4 /dev/xvdb
+            # add an entry to fstab to mount volume during boot
+            echo "/dev/xvdb       /opt/thisdir   ext4    defaults,nofail 0       2" >> /etc/fstab
+            # mount the volume on current boot
+            mount -a
+            init 6
+Outputs:
+  PublicIp:
+    Description: Public IP
+    Value: !GetAtt EC2Instance.PublicIp
+    Export:
+      Name: !Sub "${AWS::StackName}-PublicIp"
