@@ -1,0 +1,1 @@
+aws cloudformation create-stack --stack-name ec2-6 --template-body file://ec2.6.yaml --parameters ParameterKey=AvailabilityZone,ParameterValue=eu-west-2a ParameterKey=EnvironmentType,ParameterValue=dev ParameterKey=KeyPairName,ParameterValue=london-key-pair
